@@ -3,17 +3,20 @@ from .models import NetworkNode, Product
 
 
 class ProductInline(admin.TabularInline):
+    """Отображение продуктов в карточке звена сети."""
     model = Product
     extra = 1
 
 
 @admin.action(description="Очистить задолженность перед поставщиком")
 def clear_debt(modeladmin, request, queryset):
+    """Admin action для очистки задолженности перед поставщиком."""
     queryset.update(debt_to_supplier=0)
 
 
 @admin.register(NetworkNode)
 class NetworkNodeAdmin(admin.ModelAdmin):
+    """Конфигурация админ-панели для модели NetworkNode."""
     list_display = ["name", "level", "city", "country", "debt_to_supplier", "created_at"]
     list_filter = ["city", "country"]
     search_fields = ["name", "city"]
@@ -37,6 +40,7 @@ class NetworkNodeAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    """Конфигурация админ-панели для модели Product."""
     list_display = ["name", "model", "release_date", "network_node"]
     list_filter = ["release_date"]
     search_fields = ["name", "model"]

@@ -6,11 +6,13 @@ from .serializers import NetworkNodeSerializer, NetworkNodeUpdateSerializer, Pro
 
 
 class IsActiveEmployee(permissions.BasePermission):
+    """Проверка прав доступа: только активные сотрудники."""
     def has_permission(self, request, view):
         return request.user and request.user.is_active
 
 
 class NetworkNodeViewSet(viewsets.ModelViewSet):
+    """ViewSet для модели NetworkNode."""
     queryset = NetworkNode.objects.all()
     permission_classes = [IsActiveEmployee]
     filter_backends = [DjangoFilterBackend, SearchFilter]
@@ -24,6 +26,7 @@ class NetworkNodeViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """ViewSet для модели Product."""
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsActiveEmployee]
