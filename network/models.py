@@ -2,6 +2,8 @@ from django.db import models
 
 
 class NetworkNode(models.Model):
+    """Модель звена сети продаж электроники."""
+
     LEVEL_FACTORY = 0
     LEVEL_RETAIL = 1
     LEVEL_IE = 2
@@ -37,12 +39,26 @@ class NetworkNode(models.Model):
 
     @property
     def level(self):
+        """Вычисляет уровень звена в иерархии сети."""
         if self.supplier is None:
             return 0
-        return self.supplier.level + 1
+
+        visited = set()
+        current = self.supplier
+        level = 0
+
+        while current is not None:
+            if current.id in visited:
+                raise ValueError("Circular hierarchy detected")
+            visited.add(current.id)
+            level += 1
+            current = current.supplier
+
+        return level
 
 
 class Product(models.Model):
+    """Модель продукта, продаваемого звеном сети."""
     name = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
     release_date = models.DateField()
